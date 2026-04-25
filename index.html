@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Surabhi Gupta — Hindi Poet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Devanagari:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #0d0a08;
+      --surface: #13100d;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-dim: #7a6230;
+      --text: #e8e0d4;
+      --text-muted: #8a7f72;
+      --accent: #b5472a;
+      --border: rgba(201,168,76,0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── Grain overlay ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.6;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 4rem;
+      background: rgba(13,10,8,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+      gap: 4rem;
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 50%;
+      background: radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-text { position: relative; z-index: 1; }
+
+    .hero-eyebrow {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 2rem;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+
+    .hero-name-hindi {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 300;
+      color: var(--gold-dim);
+      margin-bottom: 2rem;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-desc {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      font-style: italic;
+      max-width: 480px;
+      margin-bottom: 3rem;
+      line-height: 1.9;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.9rem 2.2rem;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      text-decoration: none;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+      z-index: -1;
+    }
+
+    .hero-cta:hover { color: var(--bg); }
+    .hero-cta:hover::before { transform: translateX(0); }
+
+    /* ─── BOOK CARD ─── */
+    .hero-book {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .book-card {
+      width: 280px;
+      aspect-ratio: 2/3;
+      background: linear-gradient(135deg, #1a1208 0%, #0d0a08 50%, #1f1710 100%);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2.5rem 2rem;
+      position: relative;
+      box-shadow:
+        0 0 0 1px rgba(201,168,76,0.05),
+        0 20px 60px rgba(0,0,0,0.6),
+        0 0 80px rgba(201,168,76,0.06);
+      transform: rotate(-2deg);
+      transition: transform 0.4s;
+    }
+
+    .book-card:hover { transform: rotate(0deg) scale(1.02); }
+
+    .book-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .book-card-ornament {
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--gold-dim);
+      opacity: 0.6;
+    }
+
+    .book-card-title {
+      text-align: center;
+    }
+
+    .book-title-hindi {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--gold-light);
+      line-height: 1.4;
+      margin-bottom: 0.4rem;
+    }
+
+    .book-title-en {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    .book-card-author {
+      text-align: center;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.72rem;
+      color: var(--gold-dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .book-card-badge {
+      position: absolute;
+      bottom: -1rem;
+      right: -1rem;
+      background: var(--accent);
+      color: white;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.8rem;
+      border-radius: 2px;
+    }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0 4rem;
+      margin: 1rem 0;
+    }
+
+    .divider-line { flex: 1; height: 1px; background: var(--border); }
+    .divider-symbol { color: var(--gold-dim); font-size: 1rem; }
+
+    /* ─── SECTION ─── */
+    section { padding: 6rem 4rem; }
+
+    .section-label {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 1.5rem;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+
+    /* ─── ABOUT ─── */
+    #about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .about-quote {
+      font-size: 1.35rem;
+      font-style: italic;
+      color: var(--text-muted);
+      line-height: 1.8;
+      border-left: 2px solid var(--gold);
+      padding-left: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .about-text {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 2;
+      margin-bottom: 1rem;
+    }
+
+    .about-visual {
+      position: relative;
+    }
+
+    .about-frame {
+      width: 100%;
+      aspect-ratio: 3/4;
+      border: 1px solid var(--border);
+      background: linear-gradient(160deg, #1a1208, #0d0a08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-frame::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .about-frame-content {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .about-frame-hindi {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 2.5rem;
+      color: var(--gold-dim);
+      opacity: 0.3;
+      line-height: 1.4;
+      font-weight: 300;
+    }
+
+    .about-frame-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 1rem;
+      opacity: 0.5;
+    }
+
+    /* ─── POEMS GRID ─── */
+    #poems { background: var(--surface); }
+
+    .poems-intro {
+      max-width: 600px;
+      margin-bottom: 4rem;
+    }
+
+    .poems-intro p {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+
+    .poems-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .poem-card {
+      border: 1px solid var(--border);
+      padding: 2rem 1.8rem;
+      position: relative;
+      transition: all 0.3s;
+      background: var(--bg);
+      cursor: default;
+    }
+
+    .poem-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .poem-card:hover { border-color: rgba(201,168,76,0.35); }
+    .poem-card:hover::before { width: 100%; }
+
+    .poem-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--border);
+      line-height: 1;
+      margin-bottom: 0.8rem;
+    }
+
+    .poem-title {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+      line-height: 1.4;
+    }
+
+    .poem-desc {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    /* ─── BOOK SECTION ─── */
+    #book {
+      text-align: center;
+      position: relative;
+    }
+
+    #book::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .book-section-inner { position: relative; z-index: 1; }
+
+    .book-tagline {
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--text-muted);
+      max-width: 500px;
+      margin: 0 auto 3rem;
+      line-height: 1.8;
+    }
+
+    .book-details {
+      display: inline-flex;
+      gap: 4rem;
+      border: 1px solid var(--border);
+      padding: 2rem 4rem;
+      margin-bottom: 3rem;
+    }
+
+    .book-detail-item { text-align: center; }
+
+    .book-detail-label {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .book-detail-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--gold-light);
+    }
+
+    .buy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 1.1rem 3rem;
+      background: var(--gold);
+      color: var(--bg);
+      text-decoration: none;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: all 0.3s;
+    }
+
+    .buy-btn:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(201,168,76,0.3);
+    }
+
+    /* ─── CONTACT ─── */
+    #contact {
+      background: var(--surface);
+      text-align: center;
+    }
+
+    .contact-text {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 2;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .social-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.2rem;
+      transition: all 0.3s;
+    }
+
+    .social-link:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 2rem 4rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-text {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    .footer-hindi {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.85rem;
+      color: var(--gold-dim);
+      font-style: italic;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-text > * {
+      animation: fadeUp 0.8s ease forwards;
+      opacity: 0;
+    }
+
+    .hero-eyebrow { animation-delay: 0.1s; }
+    .hero-name { animation-delay: 0.25s; }
+    .hero-name-hindi { animation-delay: 0.35s; }
+    .hero-desc { animation-delay: 0.5s; }
+    .hero-cta { animation-delay: 0.65s; }
+
+    .hero-book {
+      animation: fadeUp 0.8s ease 0.4s forwards;
+      opacity: 0;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 2rem; }
+      .nav-links { gap: 1.5rem; }
+      .hero { grid-template-columns: 1fr; padding: 7rem 2rem 4rem; }
+      .hero-book { display: none; }
+      #about { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 2rem; }
+      .about-visual { display: none; }
+      section { padding: 4rem 2rem; }
+      #poems { padding: 4rem 2rem; }
+      .poems-grid { grid-template-columns: 1fr 1fr; }
+      .book-details { flex-direction: column; gap: 1.5rem; padding: 2rem; }
+      footer { flex-direction: column; gap: 0.8rem; text-align: center; }
+      .divider { padding: 0 2rem; }
+    }
+
+    @media (max-width: 600px) {
+      .poems-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Surabhi Gupta</a>
+    <ul class="nav-links">
+      <li><a href="#about">परिचय</a></li>
+      <li><a href="#poems">कविताएँ</a></li>
+      <li><a href="#book">पुस्तक</a></li>
+      <li><a href="#contact">संपर्क</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <p class="hero-eyebrow">Hindi Poet & Author</p>
+      <h1 class="hero-name">Surabhi<br>Gupta</h1>
+      <p class="hero-name-hindi">सुरभि गुप्ता</p>
+      <p class="hero-desc">
+        Finding profound emotions in the ordinary moments of life — through poetry that speaks of relationships, memories, and the feminine soul.
+      </p>
+      <a href="#book" class="hero-cta">
+        पुस्तक देखें &rarr;
+      </a>
+    </div>
+
+    <div class="hero-book">
+      <div class="book-card">
+        <div class="book-card-ornament">❧</div>
+        <div class="book-card-title">
+          <div class="book-title-hindi">समय की<br>गोद में</div>
+          <div class="book-title-en">In the Lap of Time</div>
+        </div>
+        <div class="book-card-author">Surabhi Gupta</div>
+        <div class="book-card-badge">Debut Collection</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-symbol">✦</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-content">
+      <p class="section-label">परिचय</p>
+      <h2 class="section-title">About the<br><em>Poet</em></h2>
+      <blockquote class="about-quote">
+        "जिंदगी के साधारण पलों में<br>गहरे भाव ढूंढती हूँ।"
+      </blockquote>
+      <p class="about-text">
+        सुरभि गुप्ता एक संवेदनशील लेखिका हैं जो जीवन के साधारण पलों में गहरे भाव ढूंढती हैं। उनकी कविताएँ रिश्तों, यादों और स्त्री मन की सच्ची अभिव्यक्ति हैं।
+      </p>
+      <p class="about-text">
+        Surabhi Gupta is an emerging voice in Hindi literature whose writing beautifully captures every shade of life. <em>Samay Ki God Mein</em> is her debut poetry collection.
+      </p>
+    </div>
+    <div class="about-visual">
+      <div class="about-frame">
+        <div class="about-frame-content">
+          <div class="about-frame-hindi">
+            शब्दों में<br>जिंदगी<br>पिरोती हूँ
+          </div>
+          <!-- Replace this div with an <img> tag for your photo -->
+          <div class="about-frame-note">[ Add your photo here ]</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-symbol">✦</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- POEMS -->
+  <section id="poems">
+    <div class="poems-intro">
+      <p class="section-label">कविताएँ</p>
+      <h2 class="section-title">50 Poems,<br><em>One Journey</em></h2>
+      <p>इस संग्रह में जीवन के अलग-अलग रंगों को समेटती 50 कविताएँ हैं — परिवार, दोस्ती, स्त्री मन, और समय के साथ बदलते पलों की सच्ची अभिव्यक्ति।</p>
+    </div>
+
+    <div class="poems-grid">
+      <div class="poem-card">
+        <div class="poem-number">01</div>
+        <div class="poem-title">माँ–पापा</div>
+        <div class="poem-desc">माता-पिता के प्रेम और बलिदान को समर्पित कविताएँ</div>
+      </div>
+      <div class="poem-card">
+        <div class="poem-number">02</div>
+        <div class="poem-title">यादगार दिन</div>
+        <div class="poem-desc">कॉलेज के वो अनमोल पल जो जिंदगी का हिस्सा बन गए</div>
+      </div>
+      <div class="poem-card">
+        <div class="poem-number">03</div>
+        <div class="poem-title">कोविड 2020</div>
+        <div class="poem-desc">महामारी के भयावह दौर की मार्मिक अभिव्यक्ति</div>
+      </div>
+      <div class="poem-card">
+        <div class="poem-number">04</div>
+        <div class="poem-title">नारी दिवस</div>
+        <div class="poem-desc">स्त्री के सम्मान और सशक्तिकरण की आवाज</div>
+      </div>
+      <div class="poem-card">
+        <div class="poem-number">05</div>
+        <div class="poem-title">रिश्तों की खुशबू</div>
+        <div class="poem-desc">दो घरों के बीच एक बेटी के मन के भाव</div>
+      </div>
+      <div class="poem-card">
+        <div class="poem-number">06</div>
+        <div class="poem-title">सुकून का सफर</div>
+        <div class="poem-desc">खुद के साथ वक्त बिताने की ज़रूरत और सुंदरता</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-symbol">✦</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- BOOK -->
+  <section id="book">
+    <div class="book-section-inner">
+      <p class="section-label" style="justify-content:center">पुस्तक</p>
+      <h2 class="section-title">समय की गोद में</h2>
+      <p class="book-tagline">
+        "हर पल की अपनी एक कहानी होती है।"<br>
+        <span style="font-size:0.85rem; opacity:0.6">— In the Lap of Time</span>
+      </p>
+
+      <div class="book-details">
+        <div class="book-detail-item">
+          <div class="book-detail-label">Pages</div>
+          <div class="book-detail-value">135</div>
+        </div>
+        <div class="book-detail-item">
+          <div class="book-detail-label">Poems</div>
+          <div class="book-detail-value">50</div>
+        </div>
+        <div class="book-detail-item">
+          <div class="book-detail-label">Language</div>
+          <div class="book-detail-value">हिंदी</div>
+        </div>
+        <div class="book-detail-item">
+          <div class="book-detail-label">Format</div>
+          <div class="book-detail-value">eBook</div>
+        </div>
+      </div>
+
+      <br>
+      <!-- Replace # with your actual Amazon.in book link -->
+      <a href="#" class="buy-btn">
+        Amazon पर खरीदें →
+      </a>
+    </div>
+  </section>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-symbol">✦</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <p class="section-label" style="justify-content:center">संपर्क</p>
+    <h2 class="section-title">Get in Touch</h2>
+    <p class="contact-text">
+      कविता के बारे में बात करें, प्रतिक्रिया दें, या बस जुड़ें।<br>
+      Reach out to connect, share feedback, or just say hello.
+    </p>
+    <div class="social-links">
+      <!-- Replace # with your actual links -->
+      <a href="#" class="social-link">Instagram</a>
+      <a href="#" class="social-link">Amazon Author Page</a>
+      <a href="mailto:your@email.com" class="social-link">Email</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-text">© 2026 Surabhi Gupta. All rights reserved.</span>
+    <span class="footer-hindi">समय की गोद में</span>
+  </footer>
+
+</body>
+</html>
