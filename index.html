@@ -186,6 +186,141 @@
     .hero-cta:hover { color: var(--bg); }
     .hero-cta:hover::before { transform: translateX(0); }
 
+    .hero-cta-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.9rem 2.2rem;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: all 0.3s;
+    }
+
+    .hero-cta-secondary:hover { color: var(--text); border-color: var(--text-muted); }
+
+    /* ─── AUTHOR PHOTO ─── */
+    .hero-author-photo {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .author-photo-circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      overflow: hidden;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #1a1208, #0d0a08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .author-photo-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .author-photo-placeholder {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.55rem;
+      color: var(--gold-dim);
+      text-align: center;
+      padding: 0.5rem;
+      line-height: 1.5;
+    }
+
+    .author-photo-circle::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.15);
+      pointer-events: none;
+    }
+
+    .author-photo-info { display: flex; flex-direction: column; gap: 0.2rem; }
+
+    .author-photo-verified {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.65rem;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .author-photo-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* ─── BUY BUTTONS ─── */
+    .buy-btn-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .buy-btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 1.1rem 2.5rem;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      text-decoration: none;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .buy-btn-secondary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+      z-index: -1;
+    }
+
+    .buy-btn-secondary:hover { color: var(--bg); }
+    .buy-btn-secondary:hover::before { transform: translateX(0); }
+
+    .buy-btn-label {
+      font-size: 0.6rem;
+      opacity: 0.7;
+      display: block;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.1rem;
+    }
+
     /* ─── BOOK CARD ─── */
     .hero-book {
       position: relative;
@@ -654,14 +789,30 @@
   <section class="hero">
     <div class="hero-text">
       <p class="hero-eyebrow">Hindi Poet & Author</p>
+
+      <!-- AUTHOR PHOTO — replace the placeholder div with your image -->
+      <div class="hero-author-photo">
+        <div class="author-photo-circle">
+          <!-- TO ADD YOUR PHOTO: replace the div below with:
+               <img src="photo.jpg" alt="Surabhi Gupta" />
+               and place photo.jpg in the same folder as index.html -->
+          <div class="author-photo-placeholder">आपकी<br>फ़ोटो<br>यहाँ</div>
+        </div>
+        <div class="author-photo-info">
+          <span class="author-photo-verified">✦ Debut Author</span>
+          <span class="author-photo-tagline">कवयित्री • लेखिका</span>
+        </div>
+      </div>
+
       <h1 class="hero-name">Surabhi<br>Gupta</h1>
       <p class="hero-name-hindi">सुरभि गुप्ता</p>
       <p class="hero-desc">
         Finding profound emotions in the ordinary moments of life — through poetry that speaks of relationships, memories, and the feminine soul.
       </p>
-      <a href="#book" class="hero-cta">
-        पुस्तक देखें &rarr;
-      </a>
+      <div class="hero-cta-group">
+        <a href="#book" class="hero-cta">पुस्तक देखें &rarr;</a>
+        <a href="#poems" class="hero-cta-secondary">कविताएँ पढ़ें</a>
+      </div>
     </div>
 
     <div class="hero-book">
@@ -695,6 +846,9 @@
         सुरभि गुप्ता एक संवेदनशील लेखिका हैं जो जीवन के साधारण पलों में गहरे भाव ढूंढती हैं। उनकी कविताएँ रिश्तों, यादों और स्त्री मन की सच्ची अभिव्यक्ति हैं।
       </p>
       <p class="about-text">
+        सुरभि गुप्ता हिंदी साहित्य की एक उभरती हुई कवयित्री हैं जिनकी लेखनी जीवन के हर रंग को बखूबी बयां करती है। समय की गोद में उनका पहला काव्य संग्रह है।
+      </p>
+      <p class="about-text">
         Surabhi Gupta is an emerging voice in Hindi literature whose writing beautifully captures every shade of life. <em>Samay Ki God Mein</em> is her debut poetry collection.
       </p>
     </div>
@@ -707,6 +861,64 @@
           <!-- Replace this div with an <img> tag for your photo -->
           <div class="about-frame-note">[ Add your photo here ]</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-symbol">✦</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- BOOK -->
+  <section id="book">
+    <div class="book-section-inner">
+      <p class="section-label" style="justify-content:center">पुस्तक</p>
+      <h2 class="section-title">समय की गोद में</h2>
+      <p class="book-tagline">
+        "हर पल की अपनी एक कहानी होती है।"<br>
+        <span style="font-size:0.85rem; opacity:0.6">— In the Lap of Time</span>
+      </p>
+
+      <div class="book-details">
+        <div class="book-detail-item">
+          <div class="book-detail-label">Pages</div>
+          <div class="book-detail-value">135</div>
+        </div>
+        <div class="book-detail-item">
+          <div class="book-detail-label">Poems</div>
+          <div class="book-detail-value">50</div>
+        </div>
+        <div class="book-detail-item">
+          <div class="book-detail-label">Language</div>
+          <div class="book-detail-value">हिंदी</div>
+        </div>
+        <div class="book-detail-item">
+          <div class="book-detail-label">eBook</div>
+          <div class="book-detail-value">Kindle</div>
+        </div>
+        <div class="book-detail-item">
+          <div class="book-detail-label">Paperback</div>
+          <div class="book-detail-value">Pothi</div>
+        </div>
+      </div>
+
+      <div class="buy-btn-group">
+        <!-- Replace # with your Amazon.in Kindle eBook link -->
+        <a href="#" class="buy-btn">
+          <span>
+            <span class="buy-btn-label">eBook (Kindle)</span>
+            Amazon पर खरीदें →
+          </span>
+        </a>
+        <!-- Replace # with your Pothi.com paperback link -->
+        <a href="#" class="buy-btn-secondary">
+          <span>
+            <span class="buy-btn-label">Paperback (Hard Copy)</span>
+            Pothi पर खरीदें →
+          </span>
+        </a>
       </div>
     </div>
   </section>
@@ -756,49 +968,6 @@
         <div class="poem-title">सुकून का सफर</div>
         <div class="poem-desc">खुद के साथ वक्त बिताने की ज़रूरत और सुंदरता</div>
       </div>
-    </div>
-  </section>
-
-  <div class="divider">
-    <div class="divider-line"></div>
-    <div class="divider-symbol">✦</div>
-    <div class="divider-line"></div>
-  </div>
-
-  <!-- BOOK -->
-  <section id="book">
-    <div class="book-section-inner">
-      <p class="section-label" style="justify-content:center">पुस्तक</p>
-      <h2 class="section-title">समय की गोद में</h2>
-      <p class="book-tagline">
-        "हर पल की अपनी एक कहानी होती है।"<br>
-        <span style="font-size:0.85rem; opacity:0.6">— In the Lap of Time</span>
-      </p>
-
-      <div class="book-details">
-        <div class="book-detail-item">
-          <div class="book-detail-label">Pages</div>
-          <div class="book-detail-value">135</div>
-        </div>
-        <div class="book-detail-item">
-          <div class="book-detail-label">Poems</div>
-          <div class="book-detail-value">50</div>
-        </div>
-        <div class="book-detail-item">
-          <div class="book-detail-label">Language</div>
-          <div class="book-detail-value">हिंदी</div>
-        </div>
-        <div class="book-detail-item">
-          <div class="book-detail-label">Format</div>
-          <div class="book-detail-value">eBook</div>
-        </div>
-      </div>
-
-      <br>
-      <!-- Replace # with your actual Amazon.in book link -->
-      <a href="#" class="buy-btn">
-        Amazon पर खरीदें →
-      </a>
     </div>
   </section>
 
