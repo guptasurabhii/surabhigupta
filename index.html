@@ -522,7 +522,7 @@
       color: var(--text-muted);
       font-style: italic;
       margin-top: 1rem;
-      opacity: 1;
+      opacity: 0.5;
     }
 
     /* ─── POEMS GRID ─── */
@@ -546,13 +546,14 @@
       gap: 1.5rem;
     }
 
+    /* ─── POEM CARD INTERACTIVE ─── */
     .poem-card {
       border: 1px solid var(--border);
-      padding: 2rem 1.8rem;
       position: relative;
-      transition: all 0.3s;
+      transition: border-color 0.3s;
       background: var(--bg);
-      cursor: default;
+      cursor: pointer;
+      overflow: hidden;
     }
 
     .poem-card::before {
@@ -561,11 +562,25 @@
       top: 0; left: 0;
       width: 0; height: 2px;
       background: var(--gold);
-      transition: width 0.3s;
+      transition: width 0.4s;
+      z-index: 1;
     }
 
     .poem-card:hover { border-color: rgba(201,168,76,0.35); }
-    .poem-card:hover::before { width: 100%; }
+    .poem-card.active { border-color: rgba(201,168,76,0.5); }
+    .poem-card:hover::before,
+    .poem-card.active::before { width: 100%; }
+
+    /* Card header — always visible */
+    .poem-card-header {
+      padding: 2rem 1.8rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .poem-card-header-left { flex: 1; }
 
     .poem-number {
       font-family: 'Playfair Display', serif;
@@ -585,12 +600,100 @@
       line-height: 1.4;
     }
 
-    .poem-desc {
+    .poem-short-desc {
       font-family: 'Noto Sans Devanagari', sans-serif;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
-      line-height: 1.8;
+      line-height: 1.7;
     }
+
+    /* Toggle icon */
+    .poem-toggle {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.3rem;
+      transition: all 0.3s;
+      color: var(--gold-dim);
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+
+    .poem-card.active .poem-toggle {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--bg);
+      transform: rotate(45deg);
+    }
+
+    /* Expandable body */
+    .poem-card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .poem-card.active .poem-card-body {
+      max-height: 600px;
+    }
+
+    .poem-card-body-inner {
+      padding: 0 1.8rem 1.8rem;
+      border-top: 1px solid var(--border);
+      margin: 0 1.8rem;
+    }
+
+    .poem-full-desc {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 2;
+      padding: 1.2rem 0 1rem;
+    }
+
+    .poem-lines {
+      border-left: 2px solid var(--gold-dim);
+      padding-left: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+
+    .poem-lines p {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 2.2;
+      font-style: italic;
+    }
+
+    .poem-read-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.4rem;
+      background: transparent;
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      text-decoration: none;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: all 0.3s;
+      margin-bottom: 0.5rem;
+    }
+
+    .poem-read-more:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--bg);
+    }
+
+
 
     /* ─── BOOK SECTION ─── */
     #book {
@@ -908,14 +1011,14 @@
 
       <div class="buy-btn-group">
         <!-- Replace # with your Amazon.in Kindle eBook link -->
-        <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="buy-btn">
+        <a href="#" class="buy-btn">
           <span>
             <span class="buy-btn-label">eBook (Kindle)</span>
             Amazon पर खरीदें →
           </span>
         </a>
         <!-- Replace # with your Pothi.com paperback link -->
-        <a href="https://store.pothi.com/book/surabhi-gupta-%E0%A4%B8%E0%A4%AE%E0%A4%AF-%E0%A4%95%E0%A5%80-%E0%A4%97%E0%A5%8B%E0%A4%A6-%E0%A4%AE%E0%A5%87%E0%A4%82-%E0%A4%85%E0%A4%AC-%E0%A4%A4%E0%A4%95-%E0%A4%95%E0%A4%BE-%E0%A4%B8%E0%A4%AB%E0%A4%B0//" class="buy-btn-secondary">
+        <a href="#" class="buy-btn-secondary">
           <span>
             <span class="buy-btn-label">Paperback (Hard Copy)</span>
             Pothi पर खरीदें →
@@ -940,207 +1043,1522 @@
     </div>
 
     <div class="poems-grid">
-      <div class="poem-card">
-        <div class="poem-number">01</div>
-        <div class="poem-title">ये उन दिनों की बात है</div>
-        <div class="poem-desc">   </div>
+
+      <!-- CARD 1 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">01</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">02</div>
-        <div class="poem-title">यादगार डायट</div>
+
+
+      <!-- CARD 2 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">02</div>
+            <div class="poem-title">यादगार डायट</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              2019 में जब नया बैच आया उस समय हमें पूरा एक वर्ष पूर्ण हो गया था डायट (कॉलेज) में तब मैने अपने बीते हुए वर्ष का अनुभव अपने जूनियर्स के साथ साझा किया।
+            </div>
+            <div class="poem-lines">
+              <p>
+                एक वर्ष बीत ‌गया एक वर्ष है बाकी,<br>
+                लेकिन न जाने क्यों डायट अभी से तेरे छूट जाने की आदत है सताती।<br>
+                <br>
+                माना की ऊब जाती हूँ कभी-कभी तुझसे,<br>
+                लेकिन चार दिन भी अगर न आऊं  तो लगता है... <br>
+
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">03</div>
-        <div class="poem-title">कहां गए वो दिन</div>
+
+
+      <!-- CARD 3 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">03</div>
+            <div class="poem-title">कहां गए वो दिन</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              कॉलेज के दिन सच में बहुत यादगार होते है कुछ किस्से तो ऐसे होते है जो हमारे जिंदगी का हिस्सा बन जाते है उन दो सालों का सफर जो मैंने कॉलेज में बिताया उन यादगार पलों की एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                बीत गए वो दिन जहाँ हम रोज आते थे <br>
+                रो-रो कर ही सही बस के धक्के खाते थे <br>
+                <br>
+                शुरु–शुरू में लगा जैसे मिली हमें बहुत बड़ी सजा <br>
+                लेकिन दिन बीतते गए और आने... <br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">04</div>
-        <div class="poem-title">ये दिन भी देखे हमने</div>
+
+
+      <!-- CARD 4 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">04</div>
+            <div class="poem-title">ये दिन भी देखे हमने</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              जिंदगी ने बहुत कुछ अच्छा दिया है लेकिन एक समय ऐसा भी दिखाया कि हम सब भी परेशान हो उठे कोरोना जैसी भयावह बीमारी से बचना और बचकर बाहर निकलना हमारे लिए एक चुनौतीपूर्ण कार्य रहा है फिर भी हमने इसका डटकर मुकाबला किया और अंत में कोरोना को जड़ से हटा दिया उस समय जो अनुभव मैने किया उसका छोटा सा वर्णन।
+            </div>
+            <div class="poem-lines">
+              <p>
+                जिंदगी ने कुछ ऐसे दिन भी दिखाये,<br>
+                घर की चार दीवारों से चाह कर भी न निकल पाए।<br>
+                <br>
+                कोरोना के कहर ने दिल को दहला दिया,<br> 
+                अपनों को अपनों से मिलना ही...|<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">05</div>
-        <div class="poem-title">कोविड 2020</div>
+
+
+      <!-- CARD 5 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">05</div>
+            <div class="poem-title">कोविड 2020</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              वर्ष 2020 हमारे जीवन का एक भयावह वर्ष रहा हर एक इंसान ने कहीं न कहीं उस समय मौत को अपने नजदीक से महसूस किया और फिर कभी ऐसे दिन न लौटे ये प्रार्थना की उस समय मेरे और 2020 के बीच बातचीत के कुछ अंश।
+            </div>
+            <div class="poem-lines">
+              <p>
+                मैं    : बाय–बाय  2020<br>
+                <br>
+                २0२0 : अरे बाय, तुम तो बहुत खुश होगे मेरे जाने से,<br>
+                       आखिर मिला ही क्या है तुम्हे मेरे यहाँ रहने से।<br>
+                मैं    : हाँ बात तो तुम्हारी...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">06</div>
-        <div class="poem-title">प्रिय 2022</div>
+
+
+      <!-- CARD 6 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">06</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">07</div>
-        <div class="poem-title">एक कहानी ऐसी भी</div>
+
+
+      <!-- CARD 7 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">07</div>
+            <div class="poem-title">प्रिय 2022</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              जैसे हम आने वाला साल का पूरे दिल से स्वागत करते हैं वैसे ही मैं बीते हुए साल का विनम्र होकर आभार व्यक्त करती हूं 2022 ने मुझे जो कुछ भी सिखाया उन सब का एक छोटा सा वर्णन।
+            </div>
+            <div class="poem-lines">
+              <p>
+                प्रिय 2022,<br>
+                <br>
+                तुम शनिवार को ही तो आए थे और शनिवार में ही चल दिए,<br>
+                हमने ऐसा क्या बिगाड़ा था. की हम जहाँ थे हमें वही छोड़ दिए। <br>
+                <br>
+                माना कि तुमने हमें बहुत कुछ सिखाया,<br> 
+                कभी हंसाया तो...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">08</div>
-        <div class="poem-title">मां तुम सबसे प्यारी हो</div>
+
+
+      <!-- CARD 8 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">08</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">09</div>
-        <div class="poem-title">पापा</div>
+
+
+      <!-- CARD 9 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">09</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">10</div>
-        <div class="poem-title">ऐसी मेरी मां है</div>
+
+
+      <!-- CARD 10 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">10</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">11</div>
-        <div class="poem-title">ऐसे होते हैं पिता</div>
+
+
+      <!-- CARD 11 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">11</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">12</div>
-        <div class="poem-title">रिश्तों की खुशबू और समय का स्वाद</div>
+
+
+      <!-- CARD 12 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">12</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">13</div>
-        <div class="poem-title">मम्मी –पापा</div>
+
+
+      <!-- CARD 13 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">13</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">14</div>
-        <div class="poem-title">हैप्पी फादर्स डे</div>
+
+
+      <!-- CARD 14 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">14</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">15</div>
-        <div class="poem-title">पच्चीस साल मुबारक ह</div>
+
+
+      <!-- CARD 15 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">15</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">16</div>
-        <div class="poem-title">मां–बाप</div>
+
+
+      <!-- CARD 16 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">16</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">17</div>
-        <div class="poem-title">फिक्र</div>
+
+
+      <!-- CARD 17 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">17</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">18</div>
-        <div class="poem-title">जुड़ाव दिल से</div>
+
+
+      <!-- CARD 18 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">18</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">19</div>
-        <div class="poem-title">बेटे (घर की शान)</div>
+
+
+      <!-- CARD 19 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">19</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">20</div>
-        <div class="poem-title">बेटी (घर का मान)</div>
+
+
+      <!-- CARD 20 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">21</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">21</div>
-	<div class="poem-title">नारी दिवस</div>
+
+
+      <!-- CARD 22 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">22</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">22</div>
-        <div class="poem-title">ए नारी, तेरी है ये कहानी</div>
+
+
+      <!-- CARD 23 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">23</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">23</div>
-        <div class="poem-title">बचपन का अहम हिस्सा</div>
+
+
+      <!-- CARD 24 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">24</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">24</div>
-        <div class="poem-title">दोस्त</div>
+
+
+      <!-- CARD 25 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">25</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">25</div>
-        <div class="poem-title">क्या ऐसे होते हैं दोस्त</div>
+
+
+      <!-- CARD 26 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">26</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">26</div>
-        <div class="poem-title">संग –सहेलियां</div>
+
+
+      <!-- CARD 27 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">27</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">27</div>
-        <div class="poem-title">भाई (एक बहन की ताकत)</div>
+
+
+      <!-- CARD 28 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">28</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">28</div>
-        <div class="poem-title">जन्मदिन मुबारक</div>
+
+
+      <!-- CARD 29 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">29</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">29</div>
-        <div class="poem-title">सुकून का सफर</div>
+
+
+      <!-- CARD 30 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">30</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">30</div>
-        <div class="poem-title">पहचान</div>
+
+
+      <!-- CARD 31 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">31</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">31</div>
-        <div class="poem-title">परिस्थितियां</div>
+
+
+      <!-- CARD 32 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">32</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">32</div>
-        <div class="poem-title">सबसे पहले खुद को खुश करेंगे</div>
+
+
+      <!-- CARD 33 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">33</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">33</div>
-        <div class="poem-title">मेरा कोई अपना</div>
+
+
+      <!-- CARD 34 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">34</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">34</div>
-        <div class="poem-title">मेरा लक्ष्य मेरा सपना</div>
+
+
+      <!-- CARD 35 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">35</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">35</div>
-        <div class="poem-title">कल</div>
+
+
+      <!-- CARD 36 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">36</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">36</div>
-        <div class="poem-title">जब मन बोला –सुनो जरा</div>
+
+
+      <!-- CARD 37 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">37</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">37</div>
-        <div class="poem-title">जिंदगी का सफर</div>
+
+
+      <!-- CARD 38 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">38</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">38</div>
-        <div class="poem-title">शुक्रिया पत्र</div>
+
+
+      <!-- CARD 39 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">39</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">39</div>
-        <div class="poem-title">पलों ने कहा लिख दो हमें</div>
+
+
+      <!-- CARD 40 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">40</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">40</div>
-        <div class="poem-title">कभी खुद के लिए भी चाहिए</div>
+
+
+      <!-- CARD 41 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">41</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">41</div>
-	<div class="poem-title">एहसास अपनों का</div>
+
+
+      <!-- CARD 42 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">42</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">42</div>
-        <div class="poem-title">कुछ पल अपने भी है</div>
+
+
+      <!-- CARD 43 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">43</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">43</div>
-        <div class="poem-title">अनमोल तोहफे</div>
+
+
+      <!-- CARD 44 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">44</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">44</div>
-        <div class="poem-title">उम्र</div>
+
+
+      <!-- CARD 45 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">45</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">45</div>
-        <div class="poem-title">बुजुर्गो का साथ ज़रूरी है</div>
+
+
+      <!-- CARD 46 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">46</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">46</div>
-        <div class="poem-title">शिक्षक</div>
+
+
+      <!-- CARD 47 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">47</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">47</div>
-        <div class="poem-title">शिक्षक दिवस</div>
+
+
+      <!-- CARD 48 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">48</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">48</div>
-        <div class="poem-title">मोबाइल</div>
+
+
+      <!-- CARD 49 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">49</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">49</div>
-        <div class="poem-title">मेरे शब्दों में सफर</div>
+
+
+      <!-- CARD 50 -->
+      <div class="poem-card" onclick="togglePoem(this)">
+        <div class="poem-card-header">
+          <div class="poem-card-header-left">
+            <div class="poem-number">50</div>
+            <div class="poem-title">ये उन दिनों की बात है</div>
+            <div class="poem-short-desc"></div>
+          </div>
+          <div class="poem-toggle">+</div>
+        </div>
+        <div class="poem-card-body">
+          <div class="poem-card-body-inner">
+            <div class="poem-full-desc">
+              मुझे नहीं पता सच्चे दोस्त कैसे होते है क्योंकि मुझे अपनी जिंदगी में कोई ऐसा मिला ही नहीं फिर एक दिन मेरा यह सपना भी पूरा हुआ मुझे बड़ी बहन के रूप में एक सच्ची और बहुत अच्छी सहेली मिली हम कैसे मिले, कब मिले और उनकी क्या जगह है मेरी जिंदगी में उसकी एक झलक।
+            </div>
+            <div class="poem-lines">
+              <p>
+                <!-- ADD YOUR 4 LINES HERE -->
+                5 जुलाई 2018 को पहुंची जब मैं डायट अपनी।<br>
+                चारो ओर अन्जान चेहरों को देख खो बैठी सुध-बुध अपनी। <br>
+                                              <br>
+                क्या होगा, कैसे होगा, कैसे रह पाऊंगी इनके बीच में? <br>
+                क्या सच में इन सब के साथ एडजस्ट...<br>
+              </p>
+            </div>
+            <a href="https://www.amazon.in/dp/B0GX2XVJJF" class="poem-read-more">Amazon पर पढ़ें →</a>
+          </div>
+        </div>
       </div>
-      <div class="poem-card">
-        <div class="poem-number">50</div>
-        <div class="poem-title">कविता</div>
-      </div>
+
     </div>
   </section>
 
@@ -1171,6 +2589,16 @@
     <span class="footer-text">© 2026 Surabhi Gupta. All rights reserved.</span>
     <span class="footer-hindi">समय की गोद में</span>
   </footer>
+
+  <script>
+    function togglePoem(card) {
+      const isActive = card.classList.contains('active');
+      // Close all open cards
+      document.querySelectorAll('.poem-card.active').forEach(c => c.classList.remove('active'));
+      // If clicked card was not active, open it
+      if (!isActive) card.classList.add('active');
+    }
+  </script>
 
 </body>
 </html>
